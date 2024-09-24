@@ -105,7 +105,7 @@ internalStyle.innerHTML = `
     cursor: text;
   }
 
-  html[data-gizoo-edit="true"] img, image, picture, svg {
+  html[data-gizoo-edit="true"] img, image, picture, video {
     user-select: all;
   }
 `;
@@ -116,6 +116,10 @@ addEventListener("click", (event) => {
   if (!editMode && event) {
     return;
   }
+
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
 
   const element = event.target as HTMLElement;
 
@@ -128,6 +132,11 @@ addEventListener("click", (event) => {
   }
 
   removeOtherEditableElements();
+
+  if (event.altKey) {
+    element.style.visibility = "hidden";
+    return
+  }
 
   const spellCheck = element.getAttribute("data-gizoo") === "true";
   const contentEditable = element.getAttribute("contenteditable") === "true";
@@ -146,8 +155,6 @@ addEventListener("click", (event) => {
   try {
     element.focus();
   }catch {}
-
-  event.preventDefault();
 }, true);
 
 addEventListener("blur", (event) => {
