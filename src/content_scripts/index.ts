@@ -138,6 +138,11 @@ addEventListener("click", (event) => {
     return
   }
 
+  if (event.shiftKey) {
+    
+    return
+  }
+
   const spellCheck = element.getAttribute("data-gizoo") === "true";
   const contentEditable = element.getAttribute("contenteditable") === "true";
 
