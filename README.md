@@ -1,6 +1,6 @@
 # Gizoo
 
-Easily tamper with the content on the site.
+Easily tamper with the content on the site.  
 This is Chrome Extension. (If you're using Firefox, please use [this](https://www.youtube.com/watch?v=yRFKa9Z-ESg))
 
 In Japanese, (Please Translate)
