@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://unpkg.com/keyboard-css@1.2.4/dist/css/main.min.css" />
   </head>
   <body>
+    <img src="./icons/gizoo_icon.png" width="64" height="64" class="my-5" alt="Gizoo" />
     <p class="switch-title">Edit Mode</p>
     <label class="switch">
       <input class="cb" type="checkbox" />
@@ -15,10 +16,61 @@
         <span class="right">on</span>
       </span>
     </label>
-    <div class="kbc-container">
-      <p><kbd class="kbc-button">Shift</kbd> + <kbd class="kbc-button">Click</kbd> = <b>Copy Element</b></p>
-      <p><kbd class="kbc-button">Shift</kbd> + <kbd class="kbc-button">Crtl</kbd> + <kbd class="kbc-button">Click</kbd> = <b>Paste Element</b></p>
-      <p><kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">Click</kbd> = <b>Remove Element</b></p>
+    <div class="kbc-container w-4/5 flex flex-col gap-y-3 mt-14 mb-7 font-medium">
+      <hr />
+      <p class="flex justify-between items-center">
+        <span>
+          <kbd class="kbc-button">Shift</kbd> + <kbd class="kbc-button">Click</kbd>
+        </span>
+        <span class="text-gray-500"> 
+          Copy Element
+        </span>
+      </p>
+      <hr />
+      <p class="flex justify-between items-center">
+        <span>
+          <kbd class="kbc-button">Shift</kbd> + <kbd class="kbc-button">Ctrl</kbd> + <kbd class="kbc-button">Click</kbd>
+        </span>
+        <span class="text-gray-500">
+          Paste Element
+        </span>
+      </p>
+      <hr />
+      <p class="flex justify-between items-center">
+        <span>
+          <kbd class="kbc-button">Ctrl</kbd> + <kbd class="kbc-button">Click</kbd>
+        </span>
+        <span class="text-gray-500">
+          Replace Element
+        </span>
+      </p>
+      <hr />
+      <p class="flex justify-between items-center">
+        <span>
+          <kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">Click</kbd>
+        </span>
+        <span class="text-gray-500">
+          Remove Element
+        </span>
+      </p>
+      <hr />
+      <p class="flex justify-between items-center">
+        <span>
+          <kbd class="kbc-button">Ctrl</kbd> + <kbd class="kbc-button">Alt</kbd> + <kbd class="kbc-button">Click</kbd>
+        </span>
+        <span class="text-gray-500">
+          Drag Element
+        </span>
+      </p>
+      <hr />
+      <div class="flex items-center gap-x-2">
+        <a href="https://twitter.com/amex2189" target="_blank"></a>
+          <img src="/shared/twitter.png" width="24" height="24" alt="Twitter" />
+        </a>
+        <a href="https://evex.land" target="_blank"></a>
+          <img src="/shared/discord.png" width="24" height="18" alt="Discord" />
+        </a>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

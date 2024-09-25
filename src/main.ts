@@ -33,7 +33,7 @@ addEventListener("DOMContentLoaded", () => {
             editMode,
           });
         });
-      }
+      },
     );
   });
 

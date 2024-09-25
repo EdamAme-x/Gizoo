@@ -1,23 +1,27 @@
 let editMode = localStorage.getItem("__gizoo_editMode") === "true";
+const drag = {
+  isDragging: false,
+  target: null as null | HTMLElement,
+};
 
 const removeOtherEditableElements = () => {
   const allGizooElements = document.querySelectorAll("[data-gizoo]");
 
-      for (const element of allGizooElements) {
-        const gizooData = element.getAttribute("data-gizoo");
+  for (const element of allGizooElements) {
+    const gizooData = element.getAttribute("data-gizoo");
 
-        if (!gizooData) {
-          continue;
-        }
+    if (!gizooData) {
+      continue;
+    }
 
-        const data = JSON.parse(gizooData);
+    const data = JSON.parse(gizooData);
 
-        element.removeAttribute("data-gizoo");
+    element.removeAttribute("data-gizoo");
 
-        element.setAttribute("spellcheck", String(data.spellCheck));
-        element.setAttribute("contenteditable", String(data.contentEditable));
-      }
-}
+    element.setAttribute("spellcheck", String(data.spellCheck));
+    element.setAttribute("contenteditable", String(data.contentEditable));
+  }
+};
 
 const disableLinks = () => {
   const allLinks = document.querySelectorAll("a");
@@ -27,11 +31,14 @@ const disableLinks = () => {
 
     if (href) {
       link.setAttribute("href", `#gizoo_${btoa(encodeURIComponent(href))}`);
-      link.setAttribute("data-gizoo-target", link.getAttribute("target") || "_self");
+      link.setAttribute(
+        "data-gizoo-target",
+        link.getAttribute("target") || "_self",
+      );
       link.setAttribute("target", "_self");
     }
   }
-}
+};
 
 const enableLinks = () => {
   const allLinks = document.querySelectorAll("a");
@@ -49,9 +56,9 @@ const enableLinks = () => {
           link.setAttribute("target", gizooTarget);
         }
       }
-    }catch {}
+    } catch {}
   }
-}
+};
 
 const disableImages = () => {
   const html = document.querySelector("html");
@@ -61,7 +68,7 @@ const disableImages = () => {
   }
 
   html.setAttribute("data-gizoo-edit", "true");
-}
+};
 
 const enableImages = () => {
   const html = document.querySelector("html");
@@ -71,7 +78,7 @@ const enableImages = () => {
   }
 
   html.removeAttribute("data-gizoo-edit");
-}
+};
 
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   if (request.type === "setMode") {
@@ -82,7 +89,7 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
       disableLinks();
 
       disableImages();
-    }else {
+    } else {
       localStorage.removeItem("__gizoo_editMode");
 
       removeOtherEditableElements();
@@ -91,10 +98,10 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
 
       enableImages();
     }
-  }else if (request.type === "getMode") {
+  } else if (request.type === "getMode") {
     sendResponse({
-        editMode
-    })
+      editMode,
+    });
   }
 });
 
@@ -143,11 +150,18 @@ addEventListener("click", (event) => {
 
   removeOtherEditableElements();
 
+  if (drag.isDragging && drag.target) {
+    drag.isDragging = false;
+    drag.target = null;
+
+    return;
+  }
+
   if (event.shiftKey && event.ctrlKey) {
     const copiedHTML = localStorage.getItem("__gizoo_copy");
     if (copiedHTML) {
       const html = copiedHTML;
-      
+
       if (html) {
         const decodedHtml = decodeURIComponent(atob(html));
 
@@ -162,18 +176,47 @@ addEventListener("click", (event) => {
         document.body.appendChild(div);
       }
     }
-    return
+    return;
+  }
+
+  if (event.ctrlKey && event.altKey) {
+    drag.isDragging = true;
+    drag.target = element.cloneNode(true) as HTMLElement;
+    element.style.visibility = "hidden";
+
+    document.body.appendChild(drag.target);
+    drag.target.style.position = "fixed";
+    drag.target.style.top = `${event.clientY}px`;
+    drag.target.style.left = `${event.clientX}px`;
+    drag.target.style.width = `${element.offsetWidth}px !important`;
+    drag.target.style.height = `${element.offsetHeight}px !important`;
+
+    return;
+  }
+
+  if (event.ctrlKey) {
+    const copiedHTML = localStorage.getItem("__gizoo_copy");
+    if (copiedHTML) {
+      const html = copiedHTML;
+
+      if (html) {
+        const decodedHtml = decodeURIComponent(atob(html));
+
+        element.outerHTML = decodedHtml;
+      }
+    }
+    return;
   }
 
   if (event.altKey) {
     element.style.visibility = "hidden";
-    return
+    return;
   }
 
   if (event.shiftKey) {
     const html = btoa(encodeURIComponent(element.outerHTML));
     localStorage.setItem("__gizoo_copy", html);
-    return
+    return;
   }
 
   const spellCheck = element.getAttribute("data-gizoo") === "true";
@@ -184,7 +227,7 @@ addEventListener("click", (event) => {
     JSON.stringify({
       spellCheck,
       contentEditable,
-    })
+    }),
   );
 
   element.setAttribute("spellcheck", "false");
@@ -192,11 +235,11 @@ addEventListener("click", (event) => {
 
   try {
     element.focus();
-  }catch {}
+  } catch {}
 }, true);
 
 addEventListener("blur", (event) => {
-  if (!editMode && event) { 
+  if (!editMode && event) {
     return;
   }
 
@@ -219,4 +262,16 @@ addEventListener("blur", (event) => {
   element.removeAttribute("data-gizoo");
   element.setAttribute("spellcheck", String(data.spellCheck));
   element.setAttribute("contenteditable", String(data.contentEditable));
+});
+
+addEventListener("mousemove", (event) => {
+  if (!editMode && event) {
+    return;
+  }
+
+  if (drag.isDragging && drag.target) {
+    drag.target.style.position = "fixed";
+    drag.target.style.top = `${event.clientY}px`;
+    drag.target.style.left = `${event.clientX}px`;
+  }
 });

@@ -1,18 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: #000000;
+  background-color: rgba(255, 255, 255, 0.99);;
 }
 
 body {
@@ -26,7 +22,6 @@ body {
 
 .switch-title {
   font-size: 20px;
-  font-weight: 700;
   margin-bottom: 0.5em;
 }
 
@@ -37,7 +32,6 @@ body {
   width: 5em;
   height: 2.5em;
   user-select: none;
-  margin-right: 10px;
 }
 
 .switch .cb {
@@ -143,14 +137,4 @@ body {
 .switch input:checked + .toggle > .right {
   transform: rotateX(10deg) rotateY(0deg);
   color: #487bdb;
-}
-
-.kbc-container {
-  margin-top: 100px;
-  font-size: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0 5px;
 }
