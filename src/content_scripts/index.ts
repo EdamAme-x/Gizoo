@@ -112,6 +112,16 @@ internalStyle.innerHTML = `
 
 document.body.appendChild(internalStyle);
 
+addEventListener("mouseover", (event) => {
+  if (!editMode && event) {
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+}, true);
+
 addEventListener("click", (event) => {
   if (!editMode && event) {
     return;
@@ -133,13 +143,36 @@ addEventListener("click", (event) => {
 
   removeOtherEditableElements();
 
+  if (event.shiftKey && event.ctrlKey) {
+    const copiedHTML = localStorage.getItem("__gizoo_copy");
+    if (copiedHTML) {
+      const html = copiedHTML;
+      
+      if (html) {
+        const decodedHtml = decodeURIComponent(atob(html));
+
+        const div = document.createElement("div");
+        div.style.position = "fixed";
+        div.style.top = `${event.clientY}px`;
+        div.style.left = `${event.clientX}px`;
+        div.setAttribute("data-gizoo-copy", "true");
+
+        div.innerHTML = decodedHtml;
+
+        document.body.appendChild(div);
+      }
+    }
+    return
+  }
+
   if (event.altKey) {
     element.style.visibility = "hidden";
     return
   }
 
   if (event.shiftKey) {
-    
+    const html = btoa(encodeURIComponent(element.outerHTML));
+    localStorage.setItem("__gizoo_copy", html);
     return
   }
 
