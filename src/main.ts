@@ -46,7 +46,7 @@ addEventListener("DOMContentLoaded", () => {
       chrome.tabs.sendMessage(tabs[0].id, {
         type: "setMode",
         editMode,
-      });
+      }, () => void 0);
     });
   });
 });

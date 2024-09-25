@@ -1,7 +1,5 @@
-import path from "node:path";
 import { defineConfig } from "vite";
 import { crx, defineManifest } from "@crxjs/vite-plugin";
-import viteRefreshGlobalCss from "./refresh-global-css.ts";
 
 const manifest = defineManifest({
   manifest_version: 3,
@@ -32,10 +30,6 @@ export default defineConfig({
   // deno-lint-ignore no-explicit-any
   plugins: [
     crx({ manifest }) as any,
-    viteRefreshGlobalCss({
-      cssFilePath: path.resolve(import.meta.url, "src/style.css"),
-      watchMatch: /src/,
-    }),
   ],
   build: {
     outDir: "dist",

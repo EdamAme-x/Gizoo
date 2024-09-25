@@ -1,3 +1,6 @@
+// @ts-expect-error
+import Toastify from 'toastify-js'
+
 let editMode = localStorage.getItem("__gizoo_editMode") === "true";
 const drag = {
   isDragging: false,
@@ -83,6 +86,7 @@ const enableImages = () => {
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   if (request.type === "setMode") {
     editMode = request.editMode;
+
     if (editMode) {
       localStorage.setItem("__gizoo_editMode", String(editMode));
 
@@ -118,6 +122,51 @@ internalStyle.innerHTML = `
 `;
 
 document.body.appendChild(internalStyle);
+
+const internalLink = document.createElement("link");
+internalLink.setAttribute("rel", "stylesheet");
+internalLink.setAttribute("href", `https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css`);
+document.body.appendChild(internalLink);
+
+const copiedToast = Toastify({
+  text: "Copied!",
+  duration: 750,
+  className: "info",
+  close: true,
+  style: {
+    background: "linear-gradient(to right, #00b09b, #96c93d)",
+  }
+});
+
+const pastedToast = Toastify({
+  text: "Pasted!",
+  duration: 750,
+  className: "info",
+  close: true,
+  style: {
+    background: "linear-gradient(to right, #00bc9b, #96cf3d)",
+  }
+});
+
+const replacedToast = Toastify({
+  text: "Replaced!",
+  duration: 750,
+  className: "info",
+  close: true,
+  style: {
+    background: "linear-gradient(to right, #0fb09b, #9fc93d)",
+  }
+});
+
+const removedToast = Toastify({
+  text: "Removed!",
+  duration: 750,
+  className: "info",
+  close: true,
+  style: {
+    background: "linear-gradient(to right, #00b0fb, #96c9fd)",
+  }
+});
 
 addEventListener("mouseover", (event) => {
   if (!editMode && event) {
@@ -176,6 +225,9 @@ addEventListener("click", (event) => {
         document.body.appendChild(div);
       }
     }
+
+    pastedToast.showToast();
+    
     return;
   }
 
@@ -205,17 +257,25 @@ addEventListener("click", (event) => {
         element.outerHTML = decodedHtml;
       }
     }
+
+    replacedToast.showToast();
+
     return;
   }
 
   if (event.altKey) {
     element.style.visibility = "hidden";
+
+    removedToast.showToast();
+
     return;
   }
 
   if (event.shiftKey) {
     const html = btoa(encodeURIComponent(element.outerHTML));
     localStorage.setItem("__gizoo_copy", html);
+
+    copiedToast.showToast();
     return;
   }
 
