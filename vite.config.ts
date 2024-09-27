@@ -36,7 +36,6 @@ const manifest = defineManifest({
       js: ["src/content_scripts/index.ts"],
     },
   ],
-  permissions: ["activeTab"]
 });
 
 export default defineConfig({
