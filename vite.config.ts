@@ -1,5 +1,17 @@
-import { defineConfig } from "vite";
+import { PluginOption, defineConfig } from "vite";
 import { crx, defineManifest } from "@crxjs/vite-plugin";
+
+const viteManifestHackIssue846: PluginOption & {
+  renderCrxManifest: (manifest: any, bundle: any) => void;
+} = {
+  // Workaround from https://github.com/crxjs/chrome-extension-tools/issues/846#issuecomment-1861880919.
+  name: 'manifestHackIssue846',
+  renderCrxManifest(_manifest, bundle) {
+    bundle['manifest.json'] = bundle['.vite/manifest.json'];
+    bundle['manifest.json'].fileName = 'manifest.json';
+    delete bundle['.vite/manifest.json'];
+  },
+};
 
 const manifest = defineManifest({
   manifest_version: 3,
@@ -27,8 +39,8 @@ const manifest = defineManifest({
 });
 
 export default defineConfig({
-  // deno-lint-ignore no-explicit-any
   plugins: [
+    viteManifestHackIssue846,
     crx({ manifest }) as any,
   ],
   build: {

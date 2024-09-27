@@ -104,7 +104,7 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
     }
   } else if (request.type === "getMode") {
     sendResponse({
-      editMode,
+      editMode: editMode || (localStorage.getItem("__gizoo_editMode") === "true"),
     });
   }
 });
